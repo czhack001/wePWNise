@@ -3,7 +3,7 @@ import sys
 
 from termcolor import colored
 
-version = "0.32 BETA"
+version = "0.32 BETA - KPMG Fork"
 
 
 class Wepwnise(object):
@@ -19,7 +19,8 @@ class Wepwnise(object):
                           'INJECT_64': self.inject64,
                           'DIR_PATHS': self.dir_paths,
                           'BIN_PATHS': self.bin_paths,
-                          'MSGBOX': self.msgbox}
+                          'MSGBOX': self.msgbox,
+						  'ENDMSGBOX': self.endmsgbox}
 
     def printBanner(self):
         with open('banner.txt', 'r') as f:
@@ -27,8 +28,9 @@ class Wepwnise(object):
 
             print colored(data, "red")
             print colored("Version %s" % version, "yellow")
-            print colored("Author: Vincent Yiu (@vysec, @vysecurity)", "yellow")
-
+            print colored("Original Author: Vincent Yiu (@vysec, @vysecurity)", "yellow")
+            print colored("Edits: Mathew Ettelaie + Konrads Smelkovs", "yellow")
+			
     def run(self, args):
         self.printBanner()
 
@@ -91,6 +93,11 @@ class Wepwnise(object):
         parser.add_argument("--msg", metavar="<window_message>", default = "This document will begin decrypting, please allow up to 5 minutes",
                             dest = "msg",
                             help = "Custom message to present the victim if --msgbox is set to True")
+        parser.add_argument("--endmsgbox", metavar="", default = True, dest = "endmsgbox",
+                            help = "Present messagebox on macro execution completion. Default is True.")
+        parser.add_argument("--endmsg", metavar="<window_message>", default = "This document has expired.",
+                            dest = "endmsg",
+                            help = "Custom message to present once the macro has completed if --endmsgbox is set to True")
         return parser
 
     def check_args(self, args):
@@ -113,7 +120,14 @@ class Wepwnise(object):
         if self.args.msgbox == True:
             output = ("MsgBox \"%s\"" % self.args.msg)
         return output
-
+		
+    def endmsgbox(self):
+        """Generate endmessagebox text"""
+        output = ""
+        if self.args.endmsgbox == True:
+            output = ("If MsgBox (\"%s\", vbQuestion + vbYesNo, \"Quit Program\") = vbYes Then \r\n Application.Quit \r\n End If" % self.args.endmsg)
+        return output
+		
     def bin_paths(self):
         """Generate List of Binary Paths"""
         output = []

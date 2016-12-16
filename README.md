@@ -12,7 +12,7 @@ To start using wePWNise, first take a look at the options it supports:
 
 ```
 usage: wepwnise.py [-h] -i86 <x86_shellcode> -i64 <x64_shellcode> [--inject64]   
-                   [--out <output_file>] [--msgbox] [--msg <window_message>]
+                   [--out <output_file>] [--msgbox] [--endmsgbox] [--msg <window_message>] [--endmsg <window_message>]
 
 optional arguments:   
   -h, --help            show this help message and exit   
@@ -22,9 +22,14 @@ optional arguments:
                         payloads only. Default is True   
   --out <output_file>   File to output the VBA macro to   
   --msgbox              Present messagebox to prevent automated analysis.   
-                        Default is True.   
+                        Default is True. 
+  --endmsgbox           Present messagebox on macro execution completion.   
+                        Default is True. 						
   --msg <window_message>   
                         Custom message to present the victim if --msgbox is   
+                        set to True
+  --endmsg <window_message>   
+                        Custom message to present once the macro has completed if --endmsgbox is   
                         set to True
 ```
 
@@ -32,7 +37,9 @@ wePWNise requires both 32 and 64 bit raw payloads in order to be able to deliver
 
 In order to defeat certain automated analysis configurations, a message box opens upon execution of the code. The text of the message box can be altered by defining its value in the --msg parameter. To disable this functionality set the --msgbox parameter to False.
 
-Due to performance conditions that may be introduced as a result of long SRPs/EMET policies, wePWNise reads two configuration files (binary-paths.txt and directory-paths.txt) that contain a list of executables and directories which are less likely to be monitored to be checked first. By editing the contents of those files the user can define their own choices instead. If the files are empty, wePWNise will directly start reading the SPRs/EMET policies as these would be defined within the Registry and make its injection choice purely based on the retrieved information.
+In order to lesson suspicion with word document macros, a message box can be displayed on completion of code execution. The text of the message box can be altered by defining its value in the --endmsg parameter, for example "Your document has expired". To disable this functionality set the --endmsgbox parameter to False.
+
+Due to performance conditions that may be introduced as a result of long SRPs/EMET policies, wePWNise reads two configuration files (binary-paths.txt and directory-paths.txt) that contain a list of executables and directories which are less likely to be monitored to be checked first. By editing the contents of those files the user can define their own choices instead. 
 
 
 ##Usage examples
@@ -74,7 +81,9 @@ Similarly, to generate 64-bit payloads only, create a dummy x86 file and supply 
 
 ##License
 
-wePWNise is released under a 3-clause BSD License and maintained by [MWR InfoSecurity](https://mwrinfosecurity.com)
+wePWNise is released under a 3-clause BSD License and the original project is maintained by [MWR InfoSecurity](https://mwrinfosecurity.com).
+Some minor improvements have been made by [KPMG LLP] (http://www.kpmg.co.uk/cyber).
 
 ##Credits
 This tool was originally developed by Vincent Yiu ([@vysecurity](https://twitter.com/vysecurity)).
+Additional KPMG updates developed by Konrads Smelkovs and Mathew Ettelaie.
